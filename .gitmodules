@@ -1,0 +1,3 @@
+[submodule "lib/WS_types"]
+	path = lib/WS_types
+	url = https://github.com/SakharovIvan/WS_types.git
