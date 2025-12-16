@@ -10,13 +10,10 @@ import {
 } from '@nestjs/microservices';
 
 @Module({
-
-  imports: [
-        ConfigModule.forRoot(),
-        AuthModule],
+  imports: [ConfigModule.forRoot(), AuthModule],
   controllers: [AppController],
   providers: [
-        {
+    {
       provide: 'AUTH_SERVICE',
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>
@@ -28,6 +25,7 @@ import {
           },
         }),
     },
-    AppService],
+    AppService,
+  ],
 })
 export class AppModule {}
