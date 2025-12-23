@@ -30,7 +30,7 @@ export class AuthController {
     return this.authService.registration(createUser);
   }
 
-  @Get(AUTH_ROUTES.SIGN_IN)
+  @Post(AUTH_ROUTES.SIGN_IN)
   async login(@Body() data: AuthDto) {
     return this.authService.login(data);
   }

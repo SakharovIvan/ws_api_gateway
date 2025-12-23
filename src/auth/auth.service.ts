@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import {
   AuthDto,
@@ -20,7 +20,9 @@ export class AuthService {
   ) {}
 
   private async commands(cmd: AUTH_CMD, data) {
-    return lastValueFrom(this.authService.send({ cmd }, data));
+    return lastValueFrom(this.authService.send({ cmd }, data)).catch((err) => {
+      throw new HttpException(err.message, err.status | 400);
+    });
   }
   async registration(data: MainRegistrationUserDto) {
     return this.commands(AUTH_CMD.registration, data);
