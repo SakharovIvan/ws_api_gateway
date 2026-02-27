@@ -47,7 +47,7 @@ export class CatalogueController
 
   @Get(CATALOGUE_ROUTES.MATERIAL + CATALOGUE_ROUTES.SEARCH)
   search_material(@Query() query: string) {
-    return this.catalogueService.search_material(JSON.stringify(query));
+    return this.catalogueService.search_material(query);
   }
 
   @Get(CATALOGUE_ROUTES.ANALOGUE + ':id')
@@ -62,7 +62,7 @@ export class CatalogueController
     return this.catalogueService.analogue_full_update(data);
   }
 
-  @Post(CATALOGUE_ROUTES.ANALOGUE)
+  @Post(CATALOGUE_ROUTES.ANALOGUE + '/upsert')
   analogue_upsert(@Body() data: Partial<Mat_No_Analog>): Promise<void> {
     return this.catalogueService.analogue_full_update(data);
   }
@@ -134,6 +134,6 @@ export class CatalogueController
 
   @Patch(CATALOGUE_ROUTES.WORK)
   work_part_update(@Body() data: Partial<Work>): Promise<void> {
-    return this.work_part_update(data);
+    return this.catalogueService.work_part_update(data);
   }
 }
