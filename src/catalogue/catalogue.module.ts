@@ -6,7 +6,6 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [ConfigModule.forRoot()],
-
   controllers: [CatalogueController],
   providers: [
     CatalogueService,

@@ -39,6 +39,18 @@ import { CatalogueModule } from './catalogue/catalogue.module';
           },
         }),
     },
+    {
+      provide: 'CATALOGUE_SERVICE',
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        ClientProxyFactory.create({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('CATALOGUE_SERVICE_HOST'),
+            port: configService.get('CATALOGUE_SERVICE_PORT'),
+          },
+        }),
+    },
     AppService,
   ],
 })

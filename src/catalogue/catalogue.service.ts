@@ -29,7 +29,7 @@ export class CatalogueService
     Partial<work_commands>
 {
   constructor(
-    @Inject('WS_CORE_SERVICE')
+    @Inject('CATALOGUE_SERVICE')
     private readonly coreService: Catalogue_ClientProxy,
   ) {}
 
