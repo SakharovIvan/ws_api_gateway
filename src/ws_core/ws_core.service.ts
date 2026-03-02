@@ -36,7 +36,9 @@ export class WsCoreService {
   async updateRepair(data: Partial<Repair_Main_type>) {
     return this.command(WS_CMD.update_repair, data);
   }
-  async createNewType(data: Repair_types) {}
+  async createNewType(data: Repair_types) {
+    return this.command(WS_CMD.)
+  }
   async workUpdate(data: Repair_Work) {}
   async toolUpdate(data: Tool) {}
   async sellerUpdate(data: Seller) {}
