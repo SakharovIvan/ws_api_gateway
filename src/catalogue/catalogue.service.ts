@@ -37,9 +37,13 @@ export class CatalogueService
     cmd: { catalogue: CATALOGUE | string; crud: CRUD },
     data: any = '',
   ): Promise<any> {
-    return lastValueFrom(this.coreService.send(cmd, data)).catch((err) => {
-      throw new HttpException(err.message, err.status | 400);
-    });
+    const res = await lastValueFrom(this.coreService.send(cmd, data)).catch(
+      (err) => {
+        throw new HttpException(err.message, err.status | 400);
+      },
+    );
+    console.log(cmd, res, data);
+    return res;
   }
 
   search_material(data: string): Promise<Material_No[]> {

@@ -11,36 +11,72 @@ import {
   Seller,
   Tool,
 } from 'lib/WS_types/ws_core/product_repair.types';
-import { WS_CMD } from 'lib/WS_types/ws_core/repiar.cmd';
+import {
+  WS_CMD,
+  WS_CORE_FUNCs,
+  type WS_CORE_ClientProxy,
+} from 'lib/WS_types/ws_core/repair.cmd';
 
 @Injectable()
-export class WsCoreService {
+export class WsCoreService implements WS_CORE_FUNCs {
   constructor(
     @Inject('WS_CORE_SERVICE')
-    private readonly coreService: ClientProxy,
+    private readonly coreService: WS_CORE_ClientProxy,
   ) {}
-  private async command(cmd: WS_CMD | string, data: any) {
-    return lastValueFrom(this.coreService.send({ cmd }, data)).catch((err) => {
-      throw new HttpException(err.message, err.status | 400);
-    });
+  private async command(cmd: WS_CMD, data: any): Promise<any> {
+    const res = await lastValueFrom(this.coreService.send(cmd, data)).catch(
+      (err) => {
+        throw new HttpException(err.message, err.status | 400);
+      },
+    );
+    console.log(res);
+    return res;
   }
-  async repair_Sample() {
-    return this.command(WS_CMD.repair_sample, '');
+  getTypes(): Promise<Repair_types[]> {
+    return this.command(WS_CMD.get_types, {});
   }
-  async createRepair(data: Partial<Repair_Main_type>) {
+  findType(data: Partial<Repair_types>): Promise<Repair_types> {
+    return this.command(WS_CMD.find_type, data);
+  }
+  createType(data: Omit<Repair_types, 'id'>): Promise<void> {
+    return this.command(WS_CMD.create_type, data);
+  }
+  create(data: Partial<Tool>): Promise<Tool> {
+    return this.command(WS_CMD.tool_create, data);
+  }
+  search(data: Partial<Tool>, create?: boolean): Promise<Tool[] | null> {
+    return this.command(WS_CMD.tool_search_upsert, { data, create });
+  }
+
+  update(data: { current_tool_id: string; data: Partial<Tool> }) {
+    return this.command(WS_CMD.tool_update, data);
+  }
+  get_sellers(data: Partial<Seller>): Promise<Seller[] | null> {
+    return this.command(WS_CMD.nomenclature_get_sellers, data);
+  }
+  get_purchasers(data: Partial<Purchaser>): Promise<Purchaser[] | null> {
+    return this.command(WS_CMD.nomenclature_get_purchasers, data);
+  }
+
+  upsert_seller(data: Seller): Promise<Seller> {
+    return this.command(WS_CMD.nomenclature_upsert_seller, data);
+  }
+
+  upsert_purchaser(data: Purchaser): Promise<Purchaser> {
+    return this.command(WS_CMD.nomenclature_upsert_purchaser, data);
+  }
+
+  create_new_repair(data: {
+    user_id: string;
+    repair: Repair_Main_type;
+  }): Promise<any> {
     return this.command(WS_CMD.create_new, data);
   }
-  async get_Repair_list(data: Partial<Repair_Main_type>) {
-    return this.command(WS_CMD.get_repair_list, data);
-  }
-  async updateRepair(data: Partial<Repair_Main_type>) {
+
+  update_repair(data: { user_id: string; repair: Repair_Main_type }) {
     return this.command(WS_CMD.update_repair, data);
   }
-  async createNewType(data: Repair_types) {
-    return this.command(WS_CMD.)
+  get_repair_list(data: { user_id: string; repair: Repair_Main_type }) {
+    return this.command(WS_CMD.get_repair_list, data);
   }
-  async workUpdate(data: Repair_Work) {}
-  async toolUpdate(data: Tool) {}
-  async sellerUpdate(data: Seller) {}
-  async purchaserUpdate(data: Purchaser) {}
 }

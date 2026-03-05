@@ -3,9 +3,10 @@ import { WsCoreController } from './ws_core.controller';
 import { WsCoreService } from './ws_core.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [ConfigModule.forRoot(), AuthModule],
   controllers: [WsCoreController],
   providers: [
     WsCoreService,

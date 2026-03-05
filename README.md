@@ -96,3 +96,24 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+
+
+### WS_CORE Routes
+Действие|	Метод|	URL
+--|--|--
+Получить типы	|GET|	/api/repair/type/list
+Найти тип	|POST|	/api/repair/type/find
+Создать тип	|POST|	/api/repair/type
+Создать инструмент|	POST|	/api/repair/tool
+Поиск инструмента	|POST	|/api/repair/tool/search
+Обновить инструмент	|PUT|	/api/repair/tool
+Получить продавцов	|POST|	/api/repair/seller
+Upsert продавца	|POST	|/api/repair/seller/upsert
+Получить покупателей|	POST|	/api/repair/purchaser
+Upsert покупателя|	POST|	/api/repair/purchaser/upsert
+Список ремонтов	|POST|	/api/repair/list
+Создать ремонт	|POST|	/api/repair
+Обновить ремонт	|PUT|	/api/repair
+Удалить ремонт	|DELETE|	/api/repair?id=...&user_id=...
+Пример данных	|GET|	/api/repair/sample 

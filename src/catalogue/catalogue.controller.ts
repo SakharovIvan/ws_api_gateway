@@ -40,17 +40,17 @@ export class CatalogueController
   material_upsert(@Body() data: Partial<Material_No>[]): Promise<void> {
     return this.catalogueService.material_upsert(data);
   }
-  @Get(CATALOGUE_ROUTES.MATERIAL + CATALOGUE_ROUTES.SEARCH + ':id')
-  get_material(@Param('id') data: Partial<Material_No>): Promise<Material_No> {
+  @Get(CATALOGUE_ROUTES.MATERIAL)
+  get_material(@Query() data: Partial<Material_No>): Promise<Material_No> {
     return this.catalogueService.get_material(data);
   }
 
-  @Get(CATALOGUE_ROUTES.MATERIAL + CATALOGUE_ROUTES.SEARCH)
-  search_material(@Query() query: string) {
+  @Get(CATALOGUE_ROUTES.MATERIAL + CATALOGUE_ROUTES.SEARCH + '/:id')
+  search_material(@Param('id') query: string) {
     return this.catalogueService.search_material(query);
   }
 
-  @Get(CATALOGUE_ROUTES.ANALOGUE + ':id')
+  @Get(CATALOGUE_ROUTES.ANALOGUE + '/:id')
   get_analogue(
     @Param('id') data: Partial<Material_No>,
   ): Promise<Mat_No_Analog[] | []> {

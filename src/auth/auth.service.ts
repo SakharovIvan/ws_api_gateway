@@ -9,6 +9,7 @@ import {
   AUTH_CMD,
   AuthTokens,
   UserModel,
+  Valid_User,
 } from 'lib/WS_types/auth_service/main';
 import { lastValueFrom } from 'rxjs';
 
@@ -23,6 +24,10 @@ export class AuthService {
     return lastValueFrom(this.authService.send({ cmd }, data)).catch((err) => {
       throw new HttpException(err.message, err.status | 400);
     });
+  }
+
+  async validate(token: string) {
+    return this.commands(AUTH_CMD.validate, token);
   }
   async registration(data: MainRegistrationUserDto) {
     return this.commands(AUTH_CMD.registration, data);
