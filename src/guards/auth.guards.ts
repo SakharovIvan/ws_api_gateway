@@ -21,22 +21,25 @@ export class JwtValidationGuard implements CanActivate {
     if (!token) {
       return false;
     }
-    console.log(JSON.parse(token));
 
     try {
-      const user = await this.authService.validate(token);
-      console.log(user);
-
+      const user = await this.authService.validate(JSON.parse(token));
       if (!user || !user.id) {
         return false;
       }
-      return user;
+      request.user = user; 
+      return true;
     } catch (err) {
       return false;
     }
   }
 
-  private extractTokenFromHeader(request: any): string | undefined {
-    return request.headers.authorization.split(' ')[1];
+private extractTokenFromHeader(request: any): string | undefined {
+  const authHeader = request.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return undefined;
   }
+  return authHeader.slice(7); // Извлекаем токен без приставки "Bearer "
+}
+
 }

@@ -30,7 +30,7 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
   constructor(
     private readonly authService: AuthService,
     private readonly wsCoreService: WsCoreService,
-  ) {}
+  ) { }
 
   @Get(REPAIR_ROUTES.TYPE + REPAIR_ROUTES.list)
   getTypes(): Promise<Repair_types[]> {
@@ -96,12 +96,14 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
   ): Promise<any> {
     return this.wsCoreService.get_repair_list({ user_id, ...data });
   }
+
   @UseGuards(JwtValidationGuard)
   @Post()
-  create_new_repa(
+  async create_new_repa(
     @UserId() user_id: string,
     @Body() data: { repair: Repair_Main_type },
   ): Promise<any> {
+    console.log(user_id)
     return this.wsCoreService.create_new_repair({ user_id, ...data });
   }
   @UseGuards(JwtValidationGuard)
