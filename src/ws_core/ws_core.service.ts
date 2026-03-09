@@ -24,8 +24,10 @@ export class WsCoreService implements WS_CORE_FUNCs {
     private readonly coreService: WS_CORE_ClientProxy,
   ) {}
   private async command(cmd: WS_CMD, data: any): Promise<any> {
+    console.log(cmd, data);
     const res = await lastValueFrom(this.coreService.send(cmd, data)).catch(
       (err) => {
+        console.log(err);
         throw new HttpException(err.message, err.status | 400);
       },
     );
