@@ -24,7 +24,6 @@ export class WsCoreService implements WS_CORE_FUNCs {
     private readonly coreService: WS_CORE_ClientProxy,
   ) {}
   private async command(cmd: WS_CMD, data: any): Promise<any> {
-    console.log(cmd, data);
     const res = await lastValueFrom(this.coreService.send(cmd, data)).catch(
       (err) => {
         console.log(err);
@@ -71,7 +70,7 @@ export class WsCoreService implements WS_CORE_FUNCs {
   create_new_repair(data: {
     user_id: string;
     repair: Repair_Main_type;
-  }): Promise<any> {
+  }): Promise<Repair_Main_type> {
     return this.command(WS_CMD.create_new, data);
   }
 
@@ -79,6 +78,9 @@ export class WsCoreService implements WS_CORE_FUNCs {
     return this.command(WS_CMD.update_repair, data);
   }
   get_repair_list(data: { user_id: string; repair: Repair_Main_type }) {
-    return this.command(WS_CMD.get_repair_list, data);
+    return this.command(WS_CMD.get_repair_list, {
+      ...data.repair,
+      user_id: data.user_id,
+    });
   }
 }

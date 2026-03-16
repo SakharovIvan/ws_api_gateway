@@ -1,10 +1,6 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  Inject,
-} from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Role } from 'lib/WS_types/auth_service/main';
 import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
@@ -27,19 +23,30 @@ export class JwtValidationGuard implements CanActivate {
       if (!user || !user.id) {
         return false;
       }
-      request.user = user; 
+      request.user = user;
+
+      try {
+        const role = await this.authService.validate_role({ user });
+        request.role = role;
+      } catch (error) {
+        const role: Partial<Role> = {
+          role: 'guest',
+          isadmin: false,
+        };
+        request.role = role;
+      }
+
       return true;
     } catch (err) {
       return false;
     }
   }
 
-private extractTokenFromHeader(request: any): string | undefined {
-  const authHeader = request.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return undefined;
+  private extractTokenFromHeader(request: any): string | undefined {
+    const authHeader = request.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return undefined;
+    }
+    return authHeader.slice(7); // Извлекаем токен без приставки "Bearer "
   }
-  return authHeader.slice(7); // Извлекаем токен без приставки "Bearer "
-}
-
 }

@@ -24,11 +24,13 @@ import {
 import { AuthService } from 'src/auth/auth.service';
 import { UserId } from 'src/decoartors/userId';
 import { JwtValidationGuard } from 'src/guards/auth.guards';
+import { ChatService } from 'src/chat/chat.service';
 
 @Controller(REPAIR_ROUTES.MAIN)
 export class WsCoreController implements Partial<WS_CORE_FUNCs> {
   constructor(
     private readonly authService: AuthService,
+    private readonly chatService: ChatService,
     private readonly wsCoreService: WsCoreService,
   ) {}
 
@@ -102,9 +104,17 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
   async create_new_repa(
     @UserId() user_id: string,
     @Body() data: { repair: Repair_Main_type },
-  ): Promise<any> {
-    return this.wsCoreService.create_new_repair({ user_id, ...data });
+  ): Promise<Repair_Main_type> {
+    const res = await this.wsCoreService.create_new_repair({
+      user_id,
+      ...data,
+    });
+    if (res) {
+      this.chatService.createChat({ path: res.id });
+    }
+    return res;
   }
+
   @UseGuards(JwtValidationGuard)
   @Put()
   update_repa(

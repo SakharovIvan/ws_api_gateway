@@ -8,6 +8,7 @@ import {
 import {
   AUTH_CMD,
   AuthTokens,
+  Role,
   UserModel,
   Valid_User,
 } from 'lib/WS_types/auth_service/main';
@@ -26,7 +27,7 @@ export class AuthService {
     });
   }
 
-  async validate(token: string) {
+  async validate(token: string): Promise<Valid_User> {
     return this.commands(AUTH_CMD.validate, token);
   }
   async registration(data: MainRegistrationUserDto) {
@@ -49,4 +50,21 @@ export class AuthService {
     return this.commands(AUTH_CMD.users, {});
   }
   async changeUser() {}
+
+  //Role Service
+  async role_list(data: {}): Promise<Role[]> {
+    return this.commands(AUTH_CMD.role_list, {});
+  }
+
+  async change_role(data: { role: Role }): Promise<void> {
+    return this.commands(AUTH_CMD.change_role, data);
+  }
+
+  async validate_role(data: { user: Valid_User }): Promise<Role> {
+    return this.commands(AUTH_CMD.validate_role, data);
+  }
+
+  async get_Role(data: { user: UserModel }): Promise<Role> {
+    return this.commands(AUTH_CMD.get_Role, data);
+  }
 }

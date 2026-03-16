@@ -1,28 +1,29 @@
 import { Module } from '@nestjs/common';
-import { WsCoreController } from './ws_core.controller';
-import { WsCoreService } from './ws_core.service';
+import { ChatController } from './chat.controller';
+import { ChatService } from './chat.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { AuthModule } from 'src/auth/auth.module';
-import { ChatModule } from 'src/chat/chat.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, ChatModule],
-  controllers: [WsCoreController],
+  imports: [ConfigModule.forRoot(), AuthModule],
+
+  controllers: [ChatController],
   providers: [
-    WsCoreService,
+    ChatService,
     {
-      provide: 'WS_CORE_SERVICE',
+      provide: 'CHAT_SERVICE',
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>
         ClientProxyFactory.create({
           transport: Transport.TCP,
           options: {
-            host: configService.get('WS_CORE_SERVICE_HOST'),
-            port: configService.get('WS_CORE_SERVICE_PORT'),
+            host: configService.get('CHAT_SERVICE_HOST'),
+            port: configService.get('CHAT_SERVICE_PORT'),
           },
         }),
     },
   ],
+  exports: [ChatService],
 })
-export class WsCoreModule {}
+export class ChatModule {}

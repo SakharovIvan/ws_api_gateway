@@ -1,7 +1,9 @@
 import {
   AUTH_ROUTES,
   AuthTokens,
-  UserModel,
+  Role,
+  type UserModel,
+  Valid_User,
 } from 'lib/WS_types/auth_service/main';
 import { AuthService } from './auth.service';
 import {
@@ -10,6 +12,7 @@ import {
   Get,
   Headers,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -66,4 +69,24 @@ export class AuthController {
 
   @Post(AUTH_ROUTES.USERS)
   async changeUser() {}
+
+  // Roles
+  @Get(AUTH_ROUTES.USERS + AUTH_ROUTES.ROLE)
+  async role_list() {
+    return this.authService.role_list({});
+  }
+
+  @Patch(AUTH_ROUTES.ROLE)
+  change_role(@Body() data: { role: Role }): Promise<void> {
+    return this.authService.change_role(data);
+  }
+
+  @Get(AUTH_ROUTES.ROLE)
+  get_Role(@Param() user: UserModel): Promise<Role> {
+    return this.authService.get_Role({ user });
+  }
+
+  validate_role(data: { user: Valid_User }): Promise<Role> {
+    return this.authService.validate_role(data);
+  }
 }
