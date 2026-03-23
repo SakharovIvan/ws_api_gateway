@@ -7,6 +7,7 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { WsCoreModule } from './ws_core/ws_core.module';
 import { CatalogueModule } from './catalogue/catalogue.module';
 import { ChatModule } from './chat/chat.module';
+import { FileStorageModule } from './file_storage/file_storage.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ChatModule } from './chat/chat.module';
     WsCoreModule,
     CatalogueModule,
     ChatModule,
+    FileStorageModule,
   ],
   controllers: [AppController],
   providers: [
@@ -63,6 +65,18 @@ import { ChatModule } from './chat/chat.module';
           options: {
             host: configService.get('CHAT_SERVICE_HOST'),
             port: configService.get('CHAT_SERVICE_TCP_PORT'),
+          },
+        }),
+    },
+    {
+      provide: 'FILE_STORAGE_SERVICE',
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        ClientProxyFactory.create({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('FILE_STORAGE_SERVICE_HOST'),
+            port: configService.get('FILE_STORAGE_SERVICE_PORT'),
           },
         }),
     },

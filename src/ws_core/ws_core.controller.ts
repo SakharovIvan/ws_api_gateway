@@ -25,11 +25,14 @@ import { AuthService } from 'src/auth/auth.service';
 import { UserId } from 'src/decoartors/userId';
 import { JwtValidationGuard } from 'src/guards/auth.guards';
 import { ChatService } from 'src/chat/chat.service';
+import { FileStorageService } from 'src/file_storage/file_storage.service';
 
 @Controller(REPAIR_ROUTES.MAIN)
 export class WsCoreController implements Partial<WS_CORE_FUNCs> {
   constructor(
     private readonly authService: AuthService,
+    private readonly fileStorageService: FileStorageService,
+
     private readonly chatService: ChatService,
     private readonly wsCoreService: WsCoreService,
   ) {}
@@ -110,7 +113,11 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
       ...data,
     });
     if (res) {
-      this.chatService.createChat({ path: res.id });
+      await this.chatService.createChat({ path: res.id });
+      await this.fileStorageService.create_bucket({
+        name: res.id,
+        description: 'repair',
+      });
     }
     return res;
   }

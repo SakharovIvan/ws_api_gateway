@@ -12,11 +12,6 @@ import { CATALOGUE_ROUTES } from 'lib/WS_types/catalogue/routes';
 import { CatalogueService } from './catalogue.service';
 import { Mat_No_Analog, Material_No } from 'lib/WS_types/catalogue/Mat_No';
 import {
-  material_commands,
-  product_commands,
-  work_commands,
-} from 'lib/WS_types/catalogue/CMDs';
-import {
   type Product,
   Product_Mat_No,
   Product_Type,
@@ -28,12 +23,7 @@ import {
 import { Work } from 'lib/WS_types/catalogue/Work';
 
 @Controller(CATALOGUE_ROUTES.MAIN)
-export class CatalogueController
-  implements
-    Partial<material_commands>,
-    Partial<product_commands>,
-    Partial<work_commands>
-{
+export class CatalogueController {
   constructor(private readonly catalogueService: CatalogueService) {}
 
   @Post(CATALOGUE_ROUTES.MATERIAL)
@@ -41,13 +31,13 @@ export class CatalogueController
     return this.catalogueService.material_upsert(data);
   }
   @Get(CATALOGUE_ROUTES.MATERIAL)
-  get_material(@Query() data: Partial<Material_No>): Promise<Material_No> {
-    return this.catalogueService.get_material(data);
-  }
-
-  @Get(CATALOGUE_ROUTES.MATERIAL + CATALOGUE_ROUTES.SEARCH + '/:id')
-  search_material(@Param('id') query: string) {
-    return this.catalogueService.search_material(query);
+  get_material(
+    @Query() query: { data: Partial<Material_No>; search?: string },
+  ): Promise<Material_No | Material_No[]> {
+    if (query.search !== undefined && !query.data) {
+      return this.catalogueService.search_material(query.search);
+    }
+    return this.catalogueService.get_material(query.data);
   }
 
   @Get(CATALOGUE_ROUTES.ANALOGUE + '/:id')
@@ -98,13 +88,17 @@ export class CatalogueController
   }
 
   @Get(CATALOGUE_ROUTES.PRODUCT + CATALOGUE_ROUTES.SEARCH)
-  get_Products(@Query() query: string): Promise<Product[] | []> {
-    return this.catalogueService.get_Products(query);
+  get_Products_list(
+    @Query() search: { query: string },
+  ): Promise<Product[] | []> {
+    return this.catalogueService.get_Products(search.query);
   }
 
-  @Get(CATALOGUE_ROUTES.SCHEME + ':id')
-  get_Scheme_data(@Param('id') data: Product): Promise<Scheme_data | []> {
-    return this.catalogueService.get_Scheme_data(data);
+  @Get(CATALOGUE_ROUTES.SCHEME)
+  get_Scheme_data(
+    @Query() query: { data: Product },
+  ): Promise<Scheme_data | []> {
+    return this.catalogueService.get_Scheme_data(query.data);
   }
 
   @Get(CATALOGUE_ROUTES.PRODUCT_MAT_NO)

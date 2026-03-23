@@ -42,7 +42,6 @@ export class CatalogueService
         throw new HttpException(err.message, err.status | 400);
       },
     );
-    console.log(cmd, res, data);
     return res;
   }
 

@@ -30,7 +30,6 @@ export class WsCoreService implements WS_CORE_FUNCs {
         throw new HttpException(err.message, err.status | 400);
       },
     );
-    console.log(res);
     return res;
   }
   getTypes(): Promise<Repair_types[]> {
