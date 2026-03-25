@@ -95,10 +95,8 @@ export class CatalogueController {
   }
 
   @Get(CATALOGUE_ROUTES.SCHEME)
-  get_Scheme_data(
-    @Query() query: { data: Product },
-  ): Promise<Scheme_data | []> {
-    return this.catalogueService.get_Scheme_data(query.data);
+  get_Scheme_data(@Query() query: Product): Promise<Scheme_data | []> {
+    return this.catalogueService.get_Scheme_data(query);
   }
 
   @Get(CATALOGUE_ROUTES.PRODUCT_MAT_NO)

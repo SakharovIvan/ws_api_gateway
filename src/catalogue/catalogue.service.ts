@@ -35,7 +35,7 @@ export class CatalogueService
 
   private async command(
     cmd: { catalogue: CATALOGUE | string; crud: CRUD },
-    data: any = '',
+    data: unknown = '',
   ): Promise<any> {
     const res = await lastValueFrom(this.coreService.send(cmd, data)).catch(
       (err) => {
