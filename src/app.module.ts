@@ -8,6 +8,7 @@ import { WsCoreModule } from './ws_core/ws_core.module';
 import { CatalogueModule } from './catalogue/catalogue.module';
 import { ChatModule } from './chat/chat.module';
 import { FileStorageModule } from './file_storage/file_storage.module';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FileStorageModule } from './file_storage/file_storage.module';
     CatalogueModule,
     ChatModule,
     FileStorageModule,
+    CustomerModule,
   ],
   controllers: [AppController],
   providers: [

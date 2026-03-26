@@ -16,8 +16,8 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
         ClientProxyFactory.create({
           transport: Transport.TCP,
           options: {
-            host: configService.get('CATALOGUE_SERVICE_HOST'),
             port: configService.get('CATALOGUE_SERVICE_PORT'),
+            host: configService.get('CATALOGUE_SERVICE_HOST'),
           },
         }),
     },
