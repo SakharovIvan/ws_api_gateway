@@ -47,6 +47,18 @@ import { CustomerModule } from './customer/customer.module';
         }),
     },
     {
+      provide: 'CUSTOMER_SERVICE',
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        ClientProxyFactory.create({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('CUSTOMER_SERVICE_HOST'),
+            port: configService.get('CUSTOMER_SERVICE_PORT'),
+          },
+        }),
+    },
+    {
       provide: 'CATALOGUE_SERVICE',
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>

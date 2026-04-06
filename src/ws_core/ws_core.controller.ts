@@ -37,6 +37,27 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
     private readonly wsCoreService: WsCoreService,
   ) {}
 
+  @UseGuards(JwtValidationGuard)
+  @Post('')
+  async create_new_repa(
+    @UserId() user_id: string,
+    @Body() data: { repair: Repair_Main_type },
+  ): Promise<Repair_Main_type> {
+    const res = await this.wsCoreService.create_new_repair({
+      user_id,
+      ...data,
+    });
+    if (res) {
+      try {
+        await this.chatService.createChat({ path: res.id });
+        await this.fileStorageService.create_bucket({
+          name: res.id,
+          description: 'repair',
+        });
+      } catch (error) {}
+    }
+    return res;
+  }
   @Get(REPAIR_ROUTES.TYPE + REPAIR_ROUTES.list)
   getTypes(): Promise<Repair_types[]> {
     return this.wsCoreService.getTypes();
@@ -100,26 +121,6 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
     @Body() data: { repair: Repair_Main_type },
   ): Promise<any> {
     return this.wsCoreService.get_repair_list({ user_id, ...data });
-  }
-
-  @UseGuards(JwtValidationGuard)
-  @Post()
-  async create_new_repa(
-    @UserId() user_id: string,
-    @Body() data: { repair: Repair_Main_type },
-  ): Promise<Repair_Main_type> {
-    const res = await this.wsCoreService.create_new_repair({
-      user_id,
-      ...data,
-    });
-    if (res) {
-      await this.chatService.createChat({ path: res.id });
-      await this.fileStorageService.create_bucket({
-        name: res.id,
-        description: 'repair',
-      });
-    }
-    return res;
   }
 
   @UseGuards(JwtValidationGuard)

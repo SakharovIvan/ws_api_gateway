@@ -115,8 +115,8 @@ export class CatalogueController {
   }
 
   @Get(CATALOGUE_ROUTES.WORK + CATALOGUE_ROUTES.SEARCH)
-  work_search(@Query() query: string): Promise<Work[] | []> {
-    return this.catalogueService.work_search(query);
+  work_search(@Query() query: { search: string }): Promise<Work[] | []> {
+    return this.catalogueService.work_search(query.search);
   }
 
   @Get(CATALOGUE_ROUTES.WORK + ':id')

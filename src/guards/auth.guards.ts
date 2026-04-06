@@ -17,12 +17,12 @@ export class JwtValidationGuard implements CanActivate {
     if (!token) {
       return false;
     }
-
     try {
       const user = await this.authService.validate(JSON.parse(token));
       if (!user || !user.id) {
         return false;
       }
+      console.log(user);
       request.user = user;
 
       try {
@@ -38,6 +38,7 @@ export class JwtValidationGuard implements CanActivate {
 
       return true;
     } catch (err) {
+      console.log(err);
       return false;
     }
   }
