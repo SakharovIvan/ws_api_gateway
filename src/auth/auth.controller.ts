@@ -14,6 +14,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -63,8 +64,8 @@ export class AuthController {
   async sentResetPasswordLink(@Body() data: { email: string }) {}
 
   @Get(AUTH_ROUTES.USERS)
-  async getUsers(): Promise<UserModel[]> {
-    return this.authService.getUserList();
+  async getUsers(@Query() data:UserModel): Promise<UserModel[]> {
+    return this.authService.getUserList(data);
   }
 
   @Post(AUTH_ROUTES.USERS)

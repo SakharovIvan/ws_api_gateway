@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { AuthService } from 'src/auth/auth.service';
-import { CUSOMER_ROUTES } from 'lib/WS_types/customer/routes';
+import { CUSTOMER_ROUTES } from 'lib/WS_types/customer/routes';
 import { UserId } from 'src/decoartors/userId';
 import { Customer } from 'lib/WS_types/customer/customer.types';
 
-@Controller(CUSOMER_ROUTES.MAIN)
+@Controller(CUSTOMER_ROUTES.MAIN)
 export class CustomerController {
   constructor(
     private readonly authService: AuthService,
@@ -17,7 +17,7 @@ export class CustomerController {
     return this.customerService.get({ user_id });
   }
 
-  @Get(CUSOMER_ROUTES.LIST)
+  @Get(CUSTOMER_ROUTES.LIST)
   async getCustomerList(@Query() query: Partial<Customer>) {
     return this.customerService.get_List(query);
   }

@@ -19,7 +19,7 @@ export class AuthService {
   constructor(
     @Inject('AUTH_SERVICE')
     private readonly authService: ClientProxy,
-  ) {}
+  ) { }
 
   private async commands(cmd: AUTH_CMD, data) {
     return lastValueFrom(this.authService.send({ cmd }, data)).catch((err) => {
@@ -45,11 +45,12 @@ export class AuthService {
   async activate(token) {
     return this.commands(AUTH_CMD.activate, token);
   }
-  async resetpassword() {}
-  async getUserList(): Promise<UserModel[]> {
-    return this.commands(AUTH_CMD.users, {});
+  async resetpassword() { }
+  async getUserList(data:UserModel): Promise<UserModel[]> {
+    const res = await this.commands(AUTH_CMD.users, data);
+    return res
   }
-  async changeUser() {}
+  async changeUser() { }
 
   //Role Service
   async role_list(data: {}): Promise<Role[]> {
