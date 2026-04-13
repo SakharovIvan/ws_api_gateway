@@ -1,7 +1,7 @@
 import {
   AUTH_ROUTES,
   AuthTokens,
-  Role,
+  type Role,
   type UserModel,
   Valid_User,
 } from 'lib/WS_types/auth_service/main';
@@ -11,6 +11,7 @@ import {
   Controller,
   Get,
   Headers,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -23,7 +24,8 @@ import {
   MainRegistrationUserDto,
   UpdateUserDto,
 } from 'lib/WS_types/auth_service/auth.dto';
-import { Request } from 'express';
+import { User_Role, UserId } from 'src/decoartors/userId';
+import { JwtValidationGuard } from 'src/guards/auth.guards';
 
 @Controller(AUTH_ROUTES.MAIN)
 export class AuthController {
@@ -64,7 +66,7 @@ export class AuthController {
   async sentResetPasswordLink(@Body() data: { email: string }) {}
 
   @Get(AUTH_ROUTES.USERS)
-  async getUsers(@Query() data:UserModel): Promise<UserModel[]> {
+  async getUsers(@Query() data: UserModel): Promise<UserModel[]> {
     return this.authService.getUserList(data);
   }
 
@@ -78,16 +80,20 @@ export class AuthController {
   }
 
   @Patch(AUTH_ROUTES.ROLE)
-  change_role(@Body() data: { role: Role }): Promise<void> {
-    return this.authService.change_role(data);
+  async change_role(@Body() data: Role): Promise<void> {
+    try {
+      await this.authService.change_role(data);
+    } catch (error) {}
   }
 
   @Get(AUTH_ROUTES.ROLE)
-  get_Role(@Param() user: UserModel): Promise<Role> {
+  get_Role(@Query() user: UserModel): Promise<Role> {
     return this.authService.get_Role({ user });
   }
 
-  validate_role(data: { user: Valid_User }): Promise<Role> {
-    return this.authService.validate_role(data);
+  @UseGuards(JwtValidationGuard)
+  @Get(AUTH_ROUTES.SIGN_IN + AUTH_ROUTES.ROLE)
+  validate_role(@User_Role() role): Promise<Role> {
+    return role;
   }
 }

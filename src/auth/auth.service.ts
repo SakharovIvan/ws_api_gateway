@@ -9,6 +9,7 @@ import {
   AUTH_CMD,
   AuthTokens,
   Role,
+  Token_Schema,
   UserModel,
   Valid_User,
 } from 'lib/WS_types/auth_service/main';
@@ -19,7 +20,7 @@ export class AuthService {
   constructor(
     @Inject('AUTH_SERVICE')
     private readonly authService: ClientProxy,
-  ) { }
+  ) {}
 
   private async commands(cmd: AUTH_CMD, data) {
     return lastValueFrom(this.authService.send({ cmd }, data)).catch((err) => {
@@ -27,8 +28,11 @@ export class AuthService {
     });
   }
 
-  async validate(token: string): Promise<Valid_User> {
+  async validate(token: string): Promise<Token_Schema> {
     return this.commands(AUTH_CMD.validate, token);
+  }
+  async validate_user_model_by_email(email: string): Promise<UserModel> {
+    return this.commands(AUTH_CMD.validate_user_model, { email });
   }
   async registration(data: MainRegistrationUserDto) {
     return this.commands(AUTH_CMD.registration, data);
@@ -45,23 +49,24 @@ export class AuthService {
   async activate(token) {
     return this.commands(AUTH_CMD.activate, token);
   }
-  async resetpassword() { }
-  async getUserList(data:UserModel): Promise<UserModel[]> {
+  async resetpassword() {}
+  async getUserList(data: UserModel): Promise<UserModel[]> {
     const res = await this.commands(AUTH_CMD.users, data);
-    return res
+    return res;
   }
-  async changeUser() { }
+  async changeUser() {}
 
   //Role Service
   async role_list(data: {}): Promise<Role[]> {
     return this.commands(AUTH_CMD.role_list, {});
   }
 
-  async change_role(data: { role: Role }): Promise<void> {
-    return this.commands(AUTH_CMD.change_role, data);
+  async change_role(role: Role): Promise<void> {
+    console.log(role);
+    return this.commands(AUTH_CMD.change_role, role);
   }
 
-  async validate_role(data: { user: Valid_User }): Promise<Role> {
+  async validate_role(data: { user: UserModel }): Promise<Role> {
     return this.commands(AUTH_CMD.validate_role, data);
   }
 

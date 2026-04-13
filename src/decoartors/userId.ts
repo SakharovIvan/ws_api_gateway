@@ -13,6 +13,18 @@ export const UserId = createParamDecorator<string>(
   },
 );
 
+export const Customer_Decorator = createParamDecorator<string>(
+  (data: unknown, ctx: ExecutionContext): string => {
+    const request = ctx.switchToHttp().getRequest();
+    if (!request.customer) {
+      throw new Error(
+        'User is not authenticated. Use @UseGuards(JwtValidationGuard) before using @UserId().',
+      );
+    }
+    return request.customer;
+  },
+);
+
 export const User = createParamDecorator<Valid_User>(
   (data: unknown, ctx: ExecutionContext): string => {
     const request = ctx.switchToHttp().getRequest();

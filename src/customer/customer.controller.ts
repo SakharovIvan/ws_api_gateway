@@ -1,9 +1,18 @@
-import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { AuthService } from 'src/auth/auth.service';
 import { CUSTOMER_ROUTES } from 'lib/WS_types/customer/routes';
-import { UserId } from 'src/decoartors/userId';
-import { Customer } from 'lib/WS_types/customer/customer.types';
+import { Customer_Decorator, User_Role, UserId } from 'src/decoartors/userId';
+import { type Customer } from 'lib/WS_types/customer/customer.types';
+import { CustomerValidationGuard } from 'src/guards/auth.guards';
 
 @Controller(CUSTOMER_ROUTES.MAIN)
 export class CustomerController {
@@ -11,10 +20,14 @@ export class CustomerController {
     private readonly authService: AuthService,
     private readonly customerService: CustomerService,
   ) {}
-
+  @UseGuards(CustomerValidationGuard)
+  @Get('/my')
+  async getMyCustomer(@Customer_Decorator() customer: Customer) {
+    return customer;
+  }
   @Get()
-  async getCustomer(@UserId() user_id: string) {
-    return this.customerService.get({ user_id });
+  async getCustomer(@Query() data: { user_id: string }) {
+    return this.customerService.get({ user_id: data.user_id });
   }
 
   @Get(CUSTOMER_ROUTES.LIST)
