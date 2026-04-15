@@ -14,6 +14,7 @@ import { REPAIR_ROUTES } from 'lib/WS_types/ws_core/routes';
 import { WS_CMD, WS_CORE_FUNCs } from 'lib/WS_types/ws_core/repair.cmd';
 import {
   Repair_Main_type,
+  Repair_Main_type_filter,
   Repair_types,
 } from 'lib/WS_types/ws_core/repair.types';
 import {
@@ -57,6 +58,10 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
       } catch (error) {}
     }
     return res;
+  }
+  @Get('')
+  async get_repair(@Query() query: Partial<Repair_Main_type>) {
+    return this.wsCoreService.get_repair(query);
   }
   @Get(REPAIR_ROUTES.TYPE + REPAIR_ROUTES.list)
   getTypes(): Promise<Repair_types[]> {

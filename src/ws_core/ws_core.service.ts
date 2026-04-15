@@ -32,6 +32,9 @@ export class WsCoreService implements WS_CORE_FUNCs {
     );
     return res;
   }
+  get_repair(data: Partial<Repair_Main_type>) {
+    return this.command(WS_CMD.get_repair_data, data);
+  }
   getTypes(): Promise<Repair_types[]> {
     return this.command(WS_CMD.get_types, {});
   }
