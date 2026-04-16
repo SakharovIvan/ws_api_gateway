@@ -21,10 +21,13 @@ import {
   Scheme_data,
 } from 'lib/WS_types/catalogue/Product';
 import { Work } from 'lib/WS_types/catalogue/Work';
+import { FileStorageService } from 'src/file_storage/file_storage.service';
 
 @Controller(CATALOGUE_ROUTES.MAIN)
 export class CatalogueController {
-  constructor(private readonly catalogueService: CatalogueService) {}
+  constructor(private readonly catalogueService: CatalogueService,
+    private readonly fileService: FileStorageService
+  ) {}
 
   @Post(CATALOGUE_ROUTES.MATERIAL)
   material_upsert(@Body() data: Partial<Material_No>[]): Promise<void> {
@@ -57,10 +60,17 @@ export class CatalogueController {
     return this.catalogueService.analogue_full_update(data);
   }
   @Post(CATALOGUE_ROUTES.MATERIAL + CATALOGUE_ROUTES.PRODUCT_TYPE)
-  set_sp_mat_no_as_product(
+  async set_sp_mat_no_as_product(
     @Body() data: Partial<Material_No>[],
   ): Promise<void> {
-    return this.catalogueService.set_sp_mat_no_as_product(data);
+    await this.catalogueService.set_sp_mat_no_as_product(data);
+    const file_promise = data.map(async (mat) =>{
+      if(mat.mat_no===undefined){return}
+      const prod=await this.catalogueService.get_Products(mat.mat_no)
+      await this.fileService.create_bucket({name: prod[0].id,description:'product'})
+    })
+    await Promise.all(file_promise)
+    return 
   }
 
   @Post(CATALOGUE_ROUTES.PRODUCT_TYPE)

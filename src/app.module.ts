@@ -9,6 +9,7 @@ import { CatalogueModule } from './catalogue/catalogue.module';
 import { ChatModule } from './chat/chat.module';
 import { FileStorageModule } from './file_storage/file_storage.module';
 import { CustomerModule } from './customer/customer.module';
+import { SeedsModule } from './seeds/seeds.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CustomerModule } from './customer/customer.module';
     ChatModule,
     FileStorageModule,
     CustomerModule,
+    SeedsModule,
   ],
   controllers: [AppController],
   providers: [

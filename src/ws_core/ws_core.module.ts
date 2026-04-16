@@ -25,5 +25,6 @@ import { FileStorageModule } from 'src/file_storage/file_storage.module';
         }),
     },
   ],
+  exports: [WsCoreService],
 })
 export class WsCoreModule {}

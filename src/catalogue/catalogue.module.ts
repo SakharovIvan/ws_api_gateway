@@ -3,9 +3,10 @@ import { CatalogueService } from './catalogue.service';
 import { CatalogueController } from './catalogue.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { FileStorageModule } from 'src/file_storage/file_storage.module';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [ConfigModule.forRoot(),FileStorageModule],
   controllers: [CatalogueController],
   providers: [
     CatalogueService,
@@ -22,5 +23,6 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
         }),
     },
   ],
+  exports: [CatalogueService],
 })
 export class CatalogueModule {}

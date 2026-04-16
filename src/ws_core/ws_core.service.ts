@@ -79,7 +79,7 @@ export class WsCoreService implements WS_CORE_FUNCs {
   update_repair(data: { user_id: string; repair: Repair_Main_type }) {
     return this.command(WS_CMD.update_repair, data);
   }
-  get_repair_list(data: { user_id: string; repair: Repair_Main_type }) {
+  get_repair_list(data: { user_id?: string; repair: Partial<Repair_Main_type> }) {
     return this.command(WS_CMD.get_repair_list, {
       ...data.repair,
       user_id: data.user_id,
