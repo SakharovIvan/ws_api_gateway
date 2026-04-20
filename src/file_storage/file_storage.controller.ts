@@ -27,49 +27,49 @@ export class FileStorageController {
 
   @Post(FILE_STORAGE_ROUTES.BUCKET)
   create_bucket(@Body() data: Bucket): Promise<void> {
-    console.log('create_bucket');
     return this.fileStorageService.create_bucket(data);
   }
 
   @Get(FILE_STORAGE_ROUTES.BUCKET)
   get_bucket(@Query() query: { name: string }): Promise<Bucket> {
-    console.log('get_bucket');
-
     return this.fileStorageService.get_bucket(query.name);
   }
 
   @Delete(FILE_STORAGE_ROUTES.BUCKET)
   delete_bucket(@Query() query: { id: string }): Promise<void> {
-    console.log('delete_bucket');
     return this.fileStorageService.delete_bucket(query.id);
   }
 
   @Get(FILE_STORAGE_ROUTES.BUCKETS)
   get_buckets(@Query() data: Partial<Bucket>): Promise<Bucket[]> {
-    console.log('get_buckets');
-
     return this.fileStorageService.get_buckets(data);
   }
 
   @Get(FILE_STORAGE_ROUTES.BUCKET + '/' + FILE_STORAGE_ROUTES.FILE)
   get_bucket_files_query(@Query() query: { name: string }): Promise<File[]> {
-    console.log('get_bucket_files', query.name);
     return this.fileStorageService.get_bucket_files(query.name);
   }
 
   @Post(FILE_STORAGE_ROUTES.BUCKET + '/' + FILE_STORAGE_ROUTES.FILE + '/:id')
   @UseInterceptors(FileInterceptor('file'))
   upload_file(
-    @UploadedFile() file: BufferedFile,
+    @UploadedFile() Buffered_file: BufferedFile,
+    @Body() file: File,
     @Param('id') bucket_id: string,
   ): Promise<void> {
-    console.log('upload file');
-    return this.fileStorageService.upload_file_data(file, bucket_id);
+    return this.fileStorageService.upload_file_data(
+      { ...Buffered_file, ...file },
+      bucket_id,
+    );
   }
 
   @Delete(FILE_STORAGE_ROUTES.BUCKET + '/' + FILE_STORAGE_ROUTES.FILE)
-  delete_file(@Body() data: { file: File; bucket_id: string }): Promise<void> {
-    console.log('delete_file');
-    return this.fileStorageService.delete_file(data);
+  delete_file(
+    @Query() data: { file_id: string; bucket_id: string },
+  ): Promise<void> {
+    return this.fileStorageService.delete_file({
+      file: { id: data.file_id },
+      bucket_id: data.bucket_id,
+    });
   }
 }

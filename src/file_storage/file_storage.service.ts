@@ -18,7 +18,6 @@ export class FileStorageService implements Partial<Bucket_func> {
     private readonly coreService: ClientProxy,
   ) {}
   async command(cmd, data: any): Promise<any> {
-    console.log(cmd, data);
     const res = await lastValueFrom(this.coreService.send(cmd, data)).catch(
       (err) => {
         console.log(err);
@@ -40,13 +39,15 @@ export class FileStorageService implements Partial<Bucket_func> {
     return this.command(FILE_STORAGE_CMDS.get_buckets, data);
   }
   async get_bucket_files(name: string): Promise<File[]> {
-    console.log(name);
     return this.command(FILE_STORAGE_CMDS.get_bucket_files, name);
   }
   async upload_file_data(file: BufferedFile, bucket_id: string): Promise<void> {
     return this.command(FILE_STORAGE_CMDS.upload_file, { file, bucket_id });
   }
-  async delete_file(data: { file: File; bucket_id: string }): Promise<void> {
+  async delete_file(data: {
+    file: Partial<File>;
+    bucket_id: string;
+  }): Promise<void> {
     return this.command(FILE_STORAGE_CMDS.delete_file, data);
   }
 }
