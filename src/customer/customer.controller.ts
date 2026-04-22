@@ -27,6 +27,7 @@ export class CustomerController {
   }
   @Get()
   async getCustomer(@Query() data: { user_id: string }) {
+    this.authService.validate;
     return this.customerService.get({ user_id: data.user_id });
   }
 
