@@ -6,9 +6,10 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { AuthModule } from 'src/auth/auth.module';
 import { ChatModule } from 'src/chat/chat.module';
 import { FileStorageModule } from 'src/file_storage/file_storage.module';
+import { CustomerModule } from 'src/customer/customer.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, ChatModule, FileStorageModule],
+  imports: [ConfigModule.forRoot(), AuthModule, ChatModule, FileStorageModule,CustomerModule],
   controllers: [WsCoreController],
   providers: [
     WsCoreService,

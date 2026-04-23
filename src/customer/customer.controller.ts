@@ -33,7 +33,7 @@ export class CustomerController {
 
   @Get(CUSTOMER_ROUTES.LIST)
   async getCustomerList(@Query() query: Partial<Customer>) {
-    return this.customerService.get_List(query);
+    return this.customerService.get_List({...query});
   }
 
   @Patch()
