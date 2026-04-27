@@ -8,6 +8,7 @@ async function bootstrap() {
       'http://127.0.0.1:5173',
       'http://127.0.0.0:5173',
       'http://localhost:5173',
+      process.env.FRONTEND_URL || 'http://127.0.0.0:5173',
     ], // разрешенные домены (* — любые)
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // разрешаем передачу cookies
