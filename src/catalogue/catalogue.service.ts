@@ -37,11 +37,14 @@ export class CatalogueService
     cmd: { catalogue: CATALOGUE | string; crud: CRUD },
     data: unknown = '',
   ): Promise<any> {
+    console.log(cmd, data);
     const res = await lastValueFrom(this.coreService.send(cmd, data)).catch(
       (err) => {
+        console.log(err);
         throw new HttpException(err.message, err.status | 400);
       },
     );
+
     return res;
   }
 
