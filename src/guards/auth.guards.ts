@@ -23,10 +23,11 @@ export class JwtValidationGuard implements CanActivate {
       if (!token_scheme || !token_scheme.id) {
         return false;
       }
-      request.user = token_scheme;
+      request.token = token_scheme;
       const userModel = await this.authService.validate_user_model_by_email(
         token_scheme.email,
       );
+      request.user = userModel;
       try {
         const role = await this.authService.validate_role({ user: userModel });
         request.role = role;
@@ -74,10 +75,11 @@ export class CustomerValidationGuard implements CanActivate {
       if (!token_scheme || !token_scheme.id) {
         return false;
       }
-      request.user = token_scheme;
+      request.token = token_scheme;
       const userModel = await this.authService.validate_user_model_by_email(
         token_scheme.email,
       );
+      request.user = userModel;
       const customer = await this.customerService.get({
         user_id: userModel.id,
       });

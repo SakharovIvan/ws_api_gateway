@@ -24,10 +24,13 @@ import {
 } from 'lib/WS_types/ws_core/product_repair.types';
 import { AuthService } from 'src/auth/auth.service';
 import { Customer_Decorator, UserId } from 'src/decoartors/userId';
-import { CustomerValidationGuard, JwtValidationGuard } from 'src/guards/auth.guards';
+import {
+  CustomerValidationGuard,
+  JwtValidationGuard,
+} from 'src/guards/auth.guards';
 import { ChatService } from 'src/chat/chat.service';
 import { FileStorageService } from 'src/file_storage/file_storage.service';
-import {type Customer } from 'lib/WS_types/customer/customer.types';
+import { type Customer } from 'lib/WS_types/customer/customer.types';
 import { CustomerService } from 'src/customer/customer.service';
 
 @Controller(REPAIR_ROUTES.MAIN)
@@ -41,16 +44,19 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
   ) {}
 
   @UseGuards(JwtValidationGuard)
-    @UseGuards(CustomerValidationGuard)
+  @UseGuards(CustomerValidationGuard)
   @Post('')
   async create_new_repa(
     @UserId() user_id: string,
-        @Customer_Decorator() customer: Customer,
+    @Customer_Decorator() customer: Customer,
     @Body() data: { repair: Repair_Main_type },
   ): Promise<Repair_Main_type> {
     const res = await this.wsCoreService.create_new_repair({
       user_id,
-      ...data,
+      repair: {
+        ...data.repair,
+        customer_id: customer.id,
+      },
     });
     if (res) {
       try {
@@ -140,7 +146,11 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
     @Customer_Decorator() customer: Customer,
     @Body() data: { repair: Repair_Main_type },
   ): Promise<any> {
-    return this.wsCoreService.update_repair({ user_id, ...data ,customer_id:customer.id});
+    return this.wsCoreService.update_repair({
+      user_id,
+      ...data,
+      customer_id: customer.id,
+    });
   }
 
   @Delete()
