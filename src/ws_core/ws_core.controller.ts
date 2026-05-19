@@ -23,7 +23,12 @@ import {
   type Tool,
 } from 'lib/WS_types/ws_core/product_repair.types';
 import { AuthService } from 'src/auth/auth.service';
-import { Customer_Decorator, UserId } from 'src/decoartors/userId';
+import {
+  Customer_Decorator,
+  User,
+  User_Role,
+  UserId,
+} from 'src/decoartors/userId';
 import {
   CustomerValidationGuard,
   JwtValidationGuard,
@@ -32,6 +37,7 @@ import { ChatService } from 'src/chat/chat.service';
 import { FileStorageService } from 'src/file_storage/file_storage.service';
 import { type Customer } from 'lib/WS_types/customer/customer.types';
 import { CustomerService } from 'src/customer/customer.service';
+import { type Role } from 'lib/WS_types/auth_service/main';
 
 @Controller(REPAIR_ROUTES.MAIN)
 export class WsCoreController implements Partial<WS_CORE_FUNCs> {
@@ -128,14 +134,23 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
   upsert_purchaser(@Body() data: Purchaser): Promise<Purchaser> {
     return this.wsCoreService.upsert_purchaser(data);
   }
-
   @UseGuards(JwtValidationGuard)
+  @UseGuards(CustomerValidationGuard)
   @Post(REPAIR_ROUTES.list)
   getRepairList(
     @UserId() user_id: string,
+    @User_Role() role: Role,
+    @Customer_Decorator() customer: Customer,
     @Body() data: { repair: Repair_Main_type },
   ): Promise<any> {
-    return this.wsCoreService.get_repair_list({ user_id, ...data });
+    if (role.isadmin) {
+      return this.wsCoreService.get_repair_list({
+        repair: { ...data.repair },
+      });
+    }
+    return this.wsCoreService.get_repair_list({
+      repair: { ...data.repair, customer_id: customer.id },
+    });
   }
 
   @UseGuards(JwtValidationGuard)
@@ -147,9 +162,9 @@ export class WsCoreController implements Partial<WS_CORE_FUNCs> {
     @Body() data: { repair: Repair_Main_type },
   ): Promise<any> {
     return this.wsCoreService.update_repair({
-      user_id,
-      ...data,
-      customer_id: customer.id,
+      repair: data.repair,
+      customer_id: data.repair.customer_id,
+      user_id: data.repair.user_id,
     });
   }
 
